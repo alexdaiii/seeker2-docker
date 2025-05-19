@@ -1,0 +1,123 @@
+services:
+
+  # seeker2:
+  #   image: alexdaiii/seeker2
+  #   user: 1001:1001
+  #   volumes:
+  #     - ./seeker2-volumes:/home/browndye/test_mmvt_openmm
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             capabilities: [gpu]
+  #   command: [
+  #     "python",
+  #     "-c",
+  #     "import scipy; print('SCIPY VERSION:', scipy.__version__); import seekr2plugin; print('seekr2plugin VERSION:', seekr2plugin.__dict__);",
+  #   ]
+
+
+  # seeker-something:
+  #   image: alexdaiii/seeker2
+  #   user: 1001:1001
+  #   command: [
+  #     "/bin/ls",
+  #     "-l",
+  #     "/home/browndye"
+  #   ]
+  #   volumes:
+  #     - ./seeker2-volumes:/home/browndye/test_mmvt_openmm
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             capabilities: [gpu]
+
+  # RUN THIS FIRST
+  # TODO: This probably works better using airflow
+  # ALso seeker2 only uses 1 gpu so adding more doesnt help
+  # seeker-prepare:
+  #   image: alexdaiii/seeker2
+  #   # Change this to your user id
+  #   user: 1001:1001
+  #   command: [
+  #     "python",
+  #     "prepare.py",
+  #     "data/sample_input_mmvt_openmm.xml"
+  #   ]
+  #   volumes:
+  #   # YOU MUST CREATE THIS VOLUME FIRST
+  #     - ./seeker2-volumes:/home/browndye/test_mmvt_openmm
+  #   environment:
+  #     - MPLCONFIGDIR=/home/browndye/test_mmvt_openmm/.mpl-config
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             capabilities: [gpu]
+
+
+  # Takes about 30 minutes to run
+  seeker2-run:
+    image: alexdaiii/seeker2
+    user: 1001:1001
+    volumes:
+      - ./seeker2-volumes:/home/browndye/test_mmvt_openmm
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      - MPLCONFIGDIR=/home/browndye/test_mmvt_openmm/.mpl-config
+    command: [
+      "python",
+      "run.py",
+      "any",
+      "/home/browndye/test_mmvt_openmm/model.xml"
+    ]
+
+  # seeker2-converge:
+  #   image: alexdaiii/seeker2
+  #   user: 1001:1001
+  #   volumes:
+  #     - ./seeker2-volumes:/home/browndye/test_mmvt_openmm
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             capabilities: [gpu]
+  #   environment:
+  #     - MPLCONFIGDIR=/home/browndye/test_mmvt_openmm/.mpl-config
+  #   command: [
+  #     "python",
+  #     "converge.py",
+  #     "/home/browndye/test_mmvt_openmm/model.xml",
+  #     "--long_converge",
+  #   ]
+
+  # seeker2-analyze:
+  #   image: alexdaiii/seeker2
+  #   user: 1001:1001
+  #   working_dir: /seekr2/seekr2
+  #   volumes:
+  #     - ./seeker2-volumes:/home/browndye/test_mmvt_openmm
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             capabilities: [gpu]
+  #   environment:
+  #     - MPLCONFIGDIR=/home/browndye/test_mmvt_openmm/.mpl-config
+  #   command: [
+  #     "python",
+  #     "analyze.py",
+  #     "/home/browndye/test_mmvt_openmm/model.xml"
+  #   ]
+

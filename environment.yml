@@ -1,0 +1,9 @@
+name: seeker2-tutorial
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - seekr2_openmm_plugin
+  - doxygen
+  - openmm=8.1
+  - cudatoolkit=11.7
